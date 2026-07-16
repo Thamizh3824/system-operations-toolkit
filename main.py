@@ -15,14 +15,15 @@ def main() -> None:
             "summary",
             "export",
             "filter",
+            "search",
         ],
         help="Command to execute"
     )
 
     parser.add_argument(
-        "level",
+        "value",
         nargs="?",
-        help="Log level for filter command"
+        help="Argument for the selected command"
     )
 
     args = parser.parse_args()
@@ -37,13 +38,33 @@ def main() -> None:
 
     elif args.command == "filter":
 
-        if not args.level:
+        if not args.value:
             print("Please provide a log level.")
             return
 
-        logs = analyzer.filter_logs(args.level)
+        logs = analyzer.filter_logs(args.value)
 
-        print(f"\n{args.level.upper()} Logs\n")
+        print(f"\n{args.value.upper()} Logs\n")
+
+        for log in logs:
+            print(
+                f"{log['timestamp']} | "
+                f"{log['level']} | "
+                f"{log['message']}"
+            )
+    elif args.command == "search":
+
+        if not args.value:
+            print("Please provide a keyword.")
+            return
+
+        logs = analyzer.search_logs(args.value)
+
+        print(f"\nSearch Results for '{args.value}'\n")
+
+        if not logs:
+            print("No matching log entries found.")
+            return
 
         for log in logs:
             print(

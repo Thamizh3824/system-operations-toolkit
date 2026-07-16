@@ -171,3 +171,25 @@ class LogAnalyzer:
             for log in self.parsed_logs
             if log["level"] == level
         ]
+    
+    def search_logs(self, keyword: str) -> list[dict[str, str]]:
+        """
+        Search log messages for a keyword.
+
+        Args:
+            keyword: Text to search for.
+
+        Returns:
+            Matching log entries.
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        keyword = keyword.lower()
+
+        return [
+            log
+            for log in self.parsed_logs
+            if keyword in log["message"].lower()
+        ]
