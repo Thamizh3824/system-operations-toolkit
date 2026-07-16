@@ -28,3 +28,16 @@ class ResourceMonitor:
         Return disk usage percentage.
         """
         return psutil.disk_usage("/").percent
+    
+    @staticmethod
+    def get_network_usage() -> dict:
+        """
+        Return network I/O statistics.
+        """
+
+        network = psutil.net_io_counters()
+
+        return {
+            "bytes_sent": network.bytes_sent,
+            "bytes_recv": network.bytes_recv,
+        }

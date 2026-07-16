@@ -1,7 +1,7 @@
 import time
 import requests
 
-from modules.log_analyzer import LogAnalyzer
+from modules.config_manager import ConfigManager
 
 
 class HealthChecker:
@@ -10,8 +10,8 @@ class HealthChecker:
     """
 
     def __init__(self) -> None:
-        analyzer = LogAnalyzer("logs/sample.log")
-        self.config = analyzer.load_config()
+        
+        self.config = ConfigManager.load()
 
     def check_services(self) -> list[dict]:
 

@@ -4,6 +4,7 @@ import csv
 from datetime import datetime
 from modules.models import LogEntry
 import json
+from modules.config_manager import ConfigManager
 
 class LogAnalyzer:
     """
@@ -267,18 +268,6 @@ class LogAnalyzer:
             if log.timestamp <= target
         ]
     
-    def load_config(self) -> dict:
-        """
-        Load application configuration.
-        """
-
-        config_path = Path("config/config.json")
-
-        with config_path.open(
-            "r",
-            encoding="utf-8"
-        ) as file:
-            return json.load(file)
         
     def check_alerts(self) -> list[str]:
         """
@@ -291,7 +280,7 @@ class LogAnalyzer:
         if not self.statistics:
             self.count_levels()
 
-        config = self.load_config()
+        config = ConfigManager.load()
 
         thresholds = config["thresholds"]
 
