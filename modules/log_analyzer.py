@@ -3,6 +3,7 @@ from collections import Counter
 import csv
 from datetime import datetime
 from modules.models import LogEntry
+import json
 
 class LogAnalyzer:
     """
@@ -266,3 +267,44 @@ class LogAnalyzer:
             if log.timestamp <= target
         ]
     
+    def load_config(self) -> dict:
+        """
+        Load application configuration.
+        """
+
+        config_path = Path("config/config.json")
+
+        with config_path.open(
+            "r",
+            encoding="utf-8"
+        ) as file:
+            return json.load(file)
+        
+    def check_alerts(self) -> list[str]:
+        """
+        Check log statistics against configured thresholds.
+
+        Returns:
+            List of alert messages.
+        """
+
+        if not self.statistics:
+            self.count_levels()
+
+        config = self.load_config()
+
+        thresholds = config["thresholds"]
+
+        alerts = []
+
+        for level, threshold in thresholds.items():
+
+            actual = self.statistics.get(level, 0)
+
+            if actual >= threshold:
+
+                alerts.append(
+                    f"{level} count ({actual}) exceeded threshold ({threshold})"
+                )
+
+        return alerts

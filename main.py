@@ -19,6 +19,7 @@ def main() -> None:
             "date",
             "after",
             "before",
+            "alerts",
         ],
         help="Command to execute"
     )
@@ -125,6 +126,21 @@ def main() -> None:
                 f"{log.level} | "
                 f"{log.message}"
             )
+
+    elif args.command == "alerts":
+
+        alerts = analyzer.check_alerts()
+
+        print("\n========== Alerts ==========\n")
+
+        if not alerts:
+            print("No alerts.")
+        else:
+            for alert in alerts:
+                print(f"🚨 {alert}")
+
+        print("\n============================")
+
 
 if __name__ == "__main__":
     main()

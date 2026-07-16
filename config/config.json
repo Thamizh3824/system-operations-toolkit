@@ -1,0 +1,6 @@
+{
+    "thresholds": {
+        "ERROR": 10,
+        "WARNING": 10
+    }
+}
