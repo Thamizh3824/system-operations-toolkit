@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from collections import Counter
 
 class LogAnalyzer:
     """
@@ -10,6 +10,7 @@ class LogAnalyzer:
         self.log_path = Path(log_path)
         self.log_entries: list[str] = []
         self.parsed_logs: list[dict[str, str]] = []
+        self.statistics: Counter[str] = Counter()
 
     def validate_file(self) -> bool:
         """
@@ -51,7 +52,7 @@ class LogAnalyzer:
     def parse_logs(self) -> list[dict[str, str]]:
         """
         Parse log entries into structured dictionaries.
-        
+
         Returns:
             list[dict[str, str]]
         """
@@ -81,3 +82,37 @@ class LogAnalyzer:
             )
 
         return self.parsed_logs
+    
+    def count_levels(self) -> Counter[str]:
+        """
+        Count the occurrence of each log level.
+
+        Returns:
+            Counter[str]: Frequency of each log level.
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        self.statistics = Counter(
+            log["level"]
+            for log in self.parsed_logs
+        )
+
+        return self.statistics
+    
+    def display_summary(self) -> None:
+        """
+        Display a formatted log summary.
+        """
+
+        if not self.statistics:
+            self.count_levels()
+
+        print("\n========== Log Summary ==========")
+        print(f"Total Entries : {len(self.parsed_logs)}\n")
+
+        for level in ["INFO", "WARNING", "ERROR"]:
+            print(f"{level:<14}: {self.statistics.get(level, 0)}")
+
+        print("=" * 33)
