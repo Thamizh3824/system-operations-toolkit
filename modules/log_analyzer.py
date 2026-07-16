@@ -9,6 +9,7 @@ class LogAnalyzer:
     def __init__(self, log_path: str) -> None:
         self.log_path = Path(log_path)
         self.log_entries: list[str] = []
+        self.parsed_logs: list[dict[str, str]] = []
 
     def validate_file(self) -> bool:
         """
@@ -46,3 +47,37 @@ class LogAnalyzer:
             ]
 
         return self.log_entries
+    
+    def parse_logs(self) -> list[dict[str, str]]:
+        """
+        Parse log entries into structured dictionaries.
+        
+        Returns:
+            list[dict[str, str]]
+        """
+
+        if not self.log_entries:
+            self.read_log()
+
+        self.parsed_logs = []
+
+        for entry in self.log_entries:
+
+            parts = entry.split(" ", 3)
+
+            if len(parts) < 4:
+                continue
+
+            timestamp = f"{parts[0]} {parts[1]}"
+            level = parts[2]
+            message = parts[3]
+
+            self.parsed_logs.append(
+                {
+                    "timestamp": timestamp,
+                    "level": level,
+                    "message": message,
+                }
+            )
+
+        return self.parsed_logs

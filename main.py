@@ -4,11 +4,9 @@ from modules.log_analyzer import LogAnalyzer
 def main() -> None:
     analyzer = LogAnalyzer("logs/sample.log")
 
-    logs = analyzer.read_log()
+    parsed_logs = analyzer.parse_logs()
 
-    print(f"Successfully loaded {len(logs)} log entries.\n")
-
-    for log in logs:
+    for log in parsed_logs:
         print(log)
 
 
