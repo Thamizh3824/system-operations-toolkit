@@ -22,6 +22,7 @@ def main() -> None:
             "before",
             "alerts",
             "health",
+            "top-errors",
         ],
         help="Command to execute"
     )
@@ -171,6 +172,19 @@ def main() -> None:
 
         print("\n====================================")
 
+    elif args.command == "top-errors":
+
+        errors = analyzer.top_errors()
+
+        print("\n========== Top Recurring Errors ==========\n")
+
+        if not errors:
+            print("No ERROR logs found.")
+        else:
+            for message, count in errors:
+                print(f"{message:<40} {count}")
+
+        print("\n==========================================")
     
 if __name__ == "__main__":
     main()

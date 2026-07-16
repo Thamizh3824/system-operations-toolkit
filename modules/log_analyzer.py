@@ -308,3 +308,25 @@ class LogAnalyzer:
                 )
 
         return alerts
+    
+    def top_errors(self, limit: int = 5) -> list[tuple[str, int]]:
+        """
+        Return the most frequent ERROR messages.
+
+        Args:
+            limit: Maximum number of results.
+
+        Returns:
+            List of (error_message, count).
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        error_counter = Counter(
+            log.message
+            for log in self.parsed_logs
+            if log.level == "ERROR"
+        )
+
+        return error_counter.most_common(limit)
