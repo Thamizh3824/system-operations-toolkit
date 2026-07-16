@@ -1,6 +1,7 @@
 from pathlib import Path
 from collections import Counter
 import csv
+from datetime import datetime
 
 class LogAnalyzer:
     """
@@ -70,7 +71,10 @@ class LogAnalyzer:
             if len(parts) < 4:
                 continue
 
-            timestamp = f"{parts[0]} {parts[1]}"
+            timestamp = datetime.strptime(
+                f"{parts[0]} {parts[1]}",
+                "%Y-%m-%d %H:%M:%S"
+            )
             level = parts[2]
             message = parts[3]
 
@@ -146,7 +150,16 @@ class LogAnalyzer:
             )
 
             writer.writeheader()
-            writer.writerows(self.parsed_logs)
+            rows = [
+                {
+                    "timestamp": log["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
+                    "level": log["level"],
+                    "message": log["message"],
+                }
+                for log in self.parsed_logs
+            ]
+
+            writer.writerows(rows)
 
         print(f"\nCSV report generated: {report_path}")
 
@@ -193,3 +206,63 @@ class LogAnalyzer:
             for log in self.parsed_logs
             if keyword in log["message"].lower()
         ]
+    
+    def filter_by_date(self, date: str) -> list[dict[str, str]]:
+        """
+        Filter logs by a specific date.
+
+        Args:
+            date: Date in YYYY-MM-DD format.
+
+        Returns:
+            Matching log entries.
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        return [
+            log
+            for log in self.parsed_logs
+            if log["timestamp"].strftime("%Y-%m-%d") == date
+        ]
+    
+    def filter_after(self, timestamp: str) -> list[dict[str, str]]:
+        """
+        Return logs after the given timestamp.
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        target = datetime.strptime(
+            timestamp,
+            "%Y-%m-%d %H:%M:%S",
+        )
+
+        return [
+            log
+            for log in self.parsed_logs
+            if log["timestamp"] >= target
+        ]
+    
+    def filter_before(self, timestamp: str) -> list[dict[str, str]]:
+        """
+        Return logs before the given timestamp.
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        target = datetime.strptime(
+            timestamp,
+            "%Y-%m-%d %H:%M:%S",
+        )
+
+        return [
+            log
+            for log in self.parsed_logs
+            if log["timestamp"] <= target
+        ]
+    
+    

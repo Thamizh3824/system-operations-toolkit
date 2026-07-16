@@ -16,6 +16,9 @@ def main() -> None:
             "export",
             "filter",
             "search",
+            "date",
+            "after",
+            "before",
         ],
         help="Command to execute"
     )
@@ -72,7 +75,56 @@ def main() -> None:
                 f"{log['level']} | "
                 f"{log['message']}"
             )
+    elif args.command == "date":
 
+        if not args.value:
+            print("Please provide a date (YYYY-MM-DD).")
+            return
+
+        logs = analyzer.filter_by_date(args.value)
+
+        print(f"\nLogs for {args.value}\n")
+
+        for log in logs:
+            print(
+                f"{log['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} | "
+                f"{log['level']} | "
+                f"{log['message']}"
+            )
+
+    elif args.command == "after":
+
+        if not args.value:
+            print("Please provide a timestamp.")
+            return
+
+        logs = analyzer.filter_after(args.value)
+
+        print(f"\nLogs after {args.value}\n")
+
+        for log in logs:
+            print(
+                f"{log['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} | "
+                f"{log['level']} | "
+                f"{log['message']}"
+            )
+
+    elif args.command == "before":
+
+        if not args.value:
+            print("Please provide a timestamp.")
+            return
+
+        logs = analyzer.filter_before(args.value)
+
+        print(f"\nLogs before {args.value}\n")
+
+        for log in logs:
+            print(
+                f"{log['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} | "
+                f"{log['level']} | "
+                f"{log['message']}"
+            )
 
 if __name__ == "__main__":
     main()
