@@ -1,5 +1,6 @@
 from pathlib import Path
 from collections import Counter
+import csv
 
 class LogAnalyzer:
     """
@@ -116,3 +117,35 @@ class LogAnalyzer:
             print(f"{level:<14}: {self.statistics.get(level, 0)}")
 
         print("=" * 33)
+
+    def export_csv(self) -> None:
+        """
+        Export parsed log entries to a CSV report.
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        report_path = Path("logs/reports/log_report.csv")
+
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with report_path.open(
+            "w",
+            newline="",
+            encoding="utf-8"
+        ) as csv_file:
+
+            writer = csv.DictWriter(
+                csv_file,
+                fieldnames=[
+                    "timestamp",
+                    "level",
+                    "message"
+                ]
+            )
+
+            writer.writeheader()
+            writer.writerows(self.parsed_logs)
+
+        print(f"\nCSV report generated: {report_path}")

@@ -6,6 +6,8 @@ def main() -> None:
 
     analyzer.display_summary()
 
+    analyzer.export_csv()
+
 
 if __name__ == "__main__":
     main()
