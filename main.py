@@ -51,9 +51,9 @@ def main() -> None:
 
         for log in logs:
             print(
-                f"{log['timestamp']} | "
-                f"{log['level']} | "
-                f"{log['message']}"
+                f"{log.timestamp} | "
+                f"{log.level} | "
+                f"{log.message}"
             )
     elif args.command == "search":
 
@@ -71,9 +71,9 @@ def main() -> None:
 
         for log in logs:
             print(
-                f"{log['timestamp']} | "
-                f"{log['level']} | "
-                f"{log['message']}"
+                f"{log.timestamp} | "
+                f"{log.level} | "
+                f"{log.message}"
             )
     elif args.command == "date":
 
@@ -87,9 +87,9 @@ def main() -> None:
 
         for log in logs:
             print(
-                f"{log['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} | "
-                f"{log['level']} | "
-                f"{log['message']}"
+                f"{log.timestamp.strftime('%Y-%m-%d %H:%M:%S')} | "
+                f"{log.level} | "
+                f"{log.message}"
             )
 
     elif args.command == "after":
@@ -104,9 +104,9 @@ def main() -> None:
 
         for log in logs:
             print(
-                f"{log['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} | "
-                f"{log['level']} | "
-                f"{log['message']}"
+                f"{log.timestamp.strftime('%Y-%m-%d %H:%M:%S')} | "
+                f"{log.level} | "
+                f"{log.message}"
             )
 
     elif args.command == "before":
@@ -121,9 +121,9 @@ def main() -> None:
 
         for log in logs:
             print(
-                f"{log['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} | "
-                f"{log['level']} | "
-                f"{log['message']}"
+                f"{log.timestamp.strftime('%Y-%m-%d %H:%M:%S')} | "
+                f"{log.level} | "
+                f"{log.message}"
             )
 
 if __name__ == "__main__":

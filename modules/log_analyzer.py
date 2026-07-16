@@ -2,6 +2,7 @@ from pathlib import Path
 from collections import Counter
 import csv
 from datetime import datetime
+from modules.models import LogEntry
 
 class LogAnalyzer:
     """
@@ -11,7 +12,7 @@ class LogAnalyzer:
     def __init__(self, log_path: str) -> None:
         self.log_path = Path(log_path)
         self.log_entries: list[str] = []
-        self.parsed_logs: list[dict[str, str]] = []
+        self.parsed_logs: list[LogEntry] = []
         self.statistics: Counter[str] = Counter()
 
     def validate_file(self) -> bool:
@@ -79,11 +80,11 @@ class LogAnalyzer:
             message = parts[3]
 
             self.parsed_logs.append(
-                {
-                    "timestamp": timestamp,
-                    "level": level,
-                    "message": message,
-                }
+                LogEntry(
+                    timestamp=timestamp,
+                    level=level,
+                    message=message,
+                )
             )
 
         return self.parsed_logs
@@ -100,7 +101,7 @@ class LogAnalyzer:
             self.parse_logs()
 
         self.statistics = Counter(
-            log["level"]
+            log.level
             for log in self.parsed_logs
         )
 
@@ -152,9 +153,9 @@ class LogAnalyzer:
             writer.writeheader()
             rows = [
                 {
-                    "timestamp": log["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
-                    "level": log["level"],
-                    "message": log["message"],
+                    "timestamp": log.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                    "level": log.level,
+                    "message": log.message,
                 }
                 for log in self.parsed_logs
             ]
@@ -182,7 +183,7 @@ class LogAnalyzer:
         return [
             log
             for log in self.parsed_logs
-            if log["level"] == level
+            if log.level == level
         ]
     
     def search_logs(self, keyword: str) -> list[dict[str, str]]:
@@ -204,7 +205,7 @@ class LogAnalyzer:
         return [
             log
             for log in self.parsed_logs
-            if keyword in log["message"].lower()
+            if keyword in log.message.lower()
         ]
     
     def filter_by_date(self, date: str) -> list[dict[str, str]]:
@@ -224,7 +225,7 @@ class LogAnalyzer:
         return [
             log
             for log in self.parsed_logs
-            if log["timestamp"].strftime("%Y-%m-%d") == date
+            if log.timestamp.strftime("%Y-%m-%d") == date
         ]
     
     def filter_after(self, timestamp: str) -> list[dict[str, str]]:
@@ -243,7 +244,7 @@ class LogAnalyzer:
         return [
             log
             for log in self.parsed_logs
-            if log["timestamp"] >= target
+            if log.timestamp >= target
         ]
     
     def filter_before(self, timestamp: str) -> list[dict[str, str]]:
@@ -262,7 +263,6 @@ class LogAnalyzer:
         return [
             log
             for log in self.parsed_logs
-            if log["timestamp"] <= target
+            if log.timestamp <= target
         ]
-    
     
