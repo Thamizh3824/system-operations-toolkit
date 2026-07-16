@@ -2,6 +2,7 @@ import argparse
 
 from modules.log_analyzer import LogAnalyzer
 from modules.health_checker import HealthChecker
+from modules.resource_monitor import ResourceMonitor
 
 
 def main() -> None:
@@ -23,6 +24,7 @@ def main() -> None:
             "alerts",
             "health",
             "top-errors",
+            "monitor",
         ],
         help="Command to execute"
     )
@@ -185,6 +187,18 @@ def main() -> None:
                 print(f"{message:<40} {count}")
 
         print("\n==========================================")
+
+    elif args.command == "monitor":
+
+        monitor = ResourceMonitor()
+
+        print("\n========== System Resources ==========\n")
+
+        print(f"CPU Usage      : {monitor.get_cpu_usage():.1f}%")
+        print(f"Memory Usage   : {monitor.get_memory_usage():.1f}%")
+        print(f"Disk Usage     : {monitor.get_disk_usage():.1f}%")
+
+        print("\n======================================")
     
 if __name__ == "__main__":
     main()
