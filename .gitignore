@@ -28,3 +28,9 @@ Thumbs.db
 
 # Reports
 logs/reports/*.csv
+
+# Ignore generated logs
+logs/*.generated.log
+
+# Ignore generated reports
+logs/reports/*.csv
