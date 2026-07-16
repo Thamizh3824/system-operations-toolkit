@@ -149,3 +149,25 @@ class LogAnalyzer:
             writer.writerows(self.parsed_logs)
 
         print(f"\nCSV report generated: {report_path}")
+
+    def filter_logs(self, level: str) -> list[dict[str, str]]:
+        """
+        Filter log entries by severity level.
+
+        Args:
+            level (str): INFO, WARNING or ERROR.
+
+        Returns:
+            list[dict[str, str]]
+        """
+
+        if not self.parsed_logs:
+            self.parse_logs()
+
+        level = level.upper()
+
+        return [
+            log
+            for log in self.parsed_logs
+            if log["level"] == level
+        ]
