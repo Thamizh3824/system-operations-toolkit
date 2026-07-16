@@ -1,6 +1,7 @@
 import argparse
 
 from modules.log_analyzer import LogAnalyzer
+from modules.health_checker import HealthChecker
 
 
 def main() -> None:
@@ -20,6 +21,7 @@ def main() -> None:
             "after",
             "before",
             "alerts",
+            "health",
         ],
         help="Command to execute"
     )
@@ -141,6 +143,34 @@ def main() -> None:
 
         print("\n============================")
 
+    elif args.command == "health":
 
+        checker = HealthChecker()
+
+        results = checker.check_services()
+
+        print("\n========== Service Health ==========\n")
+
+        print(
+            f"{'Service':<20}"
+            f"{'Status':<10}"
+            f"{'Time(ms)':<12}"
+            f"{'HTTP'}"
+        )
+
+        print("-" * 50)
+
+        for result in results:
+
+            print(
+                f"{result['name']:<20}"
+                f"{result['status']:<10}"
+                f"{str(result['response_time']):<12}"
+                f"{result['status_code']}"
+            )
+
+        print("\n====================================")
+
+    
 if __name__ == "__main__":
     main()

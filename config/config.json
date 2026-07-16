@@ -2,5 +2,24 @@
     "thresholds": {
         "ERROR": 10,
         "WARNING": 10
-    }
+    },
+
+    "services": [
+        {
+            "name": "Google",
+            "url": "https://www.google.com"
+        },
+        {
+            "name": "GitHub",
+            "url": "https://github.com"
+        },
+        {
+            "name": "JSONPlaceholder",
+            "url": "https://jsonplaceholder.typicode.com/posts/1"
+        },
+        {
+            "name": "Fake API",
+            "url": "https://this-service-does-not-exist-12345.com"
+        }
+    ]
 }
