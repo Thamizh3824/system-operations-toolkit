@@ -25,12 +25,16 @@ Thumbs.db
 
 # Logs
 *.log
+logs/*.log
+
 
 # Reports
-logs/reports/*.csv
+reports/*.csv
+reports/*.html
 
 # Ignore generated logs
 logs/*.generated.log
 
-# Ignore generated reports
-logs/reports/*.csv
+
+__pycache__/
+*.py[cod]

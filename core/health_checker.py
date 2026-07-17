@@ -1,7 +1,8 @@
 import time
 import requests
 
-from modules.config_manager import ConfigManager
+from utils.config_manager import ConfigManager
+from typing import Any
 
 
 class HealthChecker:
@@ -13,7 +14,7 @@ class HealthChecker:
         
         self.config = ConfigManager.load()
 
-    def check_services(self) -> list[dict]:
+    def check_services(self) -> list[dict[str, Any]]:
 
         results = []
 
@@ -32,16 +33,19 @@ class HealthChecker:
                     time.perf_counter() - start
                 ) * 1000
 
+                status = "UP" if response.ok else "DOWN"
+
                 results.append(
                     {
                         "name": service["name"],
-                        "status": "UP",
+                        "status": status,
                         "status_code": response.status_code,
                         "response_time": round(elapsed, 2),
                     }
                 )
 
             except requests.RequestException:
+                
 
                 results.append(
                     {

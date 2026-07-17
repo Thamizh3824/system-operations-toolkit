@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-
+from utils.logger import logger
 
 class ConfigManager:
     """
@@ -19,4 +19,8 @@ class ConfigManager:
             "r",
             encoding="utf-8"
         ) as file:
-            return json.load(file)
+            config = json.load(file)
+
+        logger.info("Configuration loaded")
+
+        return config

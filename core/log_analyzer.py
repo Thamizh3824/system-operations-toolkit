@@ -2,9 +2,10 @@ from pathlib import Path
 from collections import Counter
 import csv
 from datetime import datetime
-from modules.models import LogEntry
+from models.log_entry import LogEntry
 import json
-from modules.config_manager import ConfigManager
+from utils.logger import logger
+
 
 class LogAnalyzer:
     """
@@ -54,12 +55,12 @@ class LogAnalyzer:
 
         return self.log_entries
     
-    def parse_logs(self) -> list[dict[str, str]]:
+    def parse_logs(self) -> list[LogEntry]:
         """
         Parse log entries into structured dictionaries.
 
         Returns:
-            list[dict[str, str]]
+            list[LogEntry]
         """
 
         if not self.log_entries:
@@ -88,6 +89,10 @@ class LogAnalyzer:
                     message=message,
                 )
             )
+        logger.info(
+            "Parsed %d log entries",
+            len(self.parsed_logs),
+        )
 
         return self.parsed_logs
     
@@ -133,7 +138,7 @@ class LogAnalyzer:
         if not self.parsed_logs:
             self.parse_logs()
 
-        report_path = Path("logs/reports/log_report.csv")
+        report_path = Path("reports/log_report.csv")
 
         report_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -164,9 +169,13 @@ class LogAnalyzer:
 
             writer.writerows(rows)
 
+            logger.info(
+                "CSV exported to reports/log_report.csv"
+            )
+
         print(f"\nCSV report generated: {report_path}")
 
-    def filter_logs(self, level: str) -> list[dict[str, str]]:
+    def filter_logs(self, level: str) -> list[LogEntry]:
         """
         Filter log entries by severity level.
 
@@ -174,7 +183,7 @@ class LogAnalyzer:
             level (str): INFO, WARNING or ERROR.
 
         Returns:
-            list[dict[str, str]]
+            list[LogEntry]
         """
 
         if not self.parsed_logs:
@@ -188,7 +197,7 @@ class LogAnalyzer:
             if log.level == level
         ]
     
-    def search_logs(self, keyword: str) -> list[dict[str, str]]:
+    def search_logs(self, keyword: str) -> list[LogEntry]:
         """
         Search log messages for a keyword.
 
@@ -210,7 +219,7 @@ class LogAnalyzer:
             if keyword in log.message.lower()
         ]
     
-    def filter_by_date(self, date: str) -> list[dict[str, str]]:
+    def filter_by_date(self, date: str) -> list[LogEntry]:
         """
         Filter logs by a specific date.
 
@@ -230,7 +239,7 @@ class LogAnalyzer:
             if log.timestamp.strftime("%Y-%m-%d") == date
         ]
     
-    def filter_after(self, timestamp: str) -> list[dict[str, str]]:
+    def filter_after(self, timestamp: str) -> list[LogEntry]:
         """
         Return logs after the given timestamp.
         """
@@ -249,7 +258,7 @@ class LogAnalyzer:
             if log.timestamp >= target
         ]
     
-    def filter_before(self, timestamp: str) -> list[dict[str, str]]:
+    def filter_before(self, timestamp: str) -> list[LogEntry]:
         """
         Return logs before the given timestamp.
         """
@@ -269,35 +278,6 @@ class LogAnalyzer:
         ]
     
         
-    def check_alerts(self) -> list[str]:
-        """
-        Check log statistics against configured thresholds.
-
-        Returns:
-            List of alert messages.
-        """
-
-        if not self.statistics:
-            self.count_levels()
-
-        config = ConfigManager.load()
-
-        thresholds = config["thresholds"]
-
-        alerts = []
-
-        for level, threshold in thresholds.items():
-
-            actual = self.statistics.get(level, 0)
-
-            if actual >= threshold:
-
-                alerts.append(
-                    f"{level} count ({actual}) exceeded threshold ({threshold})"
-                )
-
-        return alerts
-    
     def top_errors(self, limit: int = 5) -> list[tuple[str, int]]:
         """
         Return the most frequent ERROR messages.

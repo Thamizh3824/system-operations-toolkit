@@ -1,11 +1,14 @@
 import argparse
 
-from modules.log_analyzer import LogAnalyzer
-from modules.health_checker import HealthChecker
-from modules.resource_monitor import ResourceMonitor
-
+from core.log_analyzer import LogAnalyzer
+from core.health_checker import HealthChecker
+from core.resource_monitor import ResourceMonitor
+from utils.logger import logger
+from core.alert_engine import AlertEngine
 
 def main() -> None:
+
+    logger.info("Application started")
 
     parser = argparse.ArgumentParser(
         description="System Operations Toolkit"
@@ -134,7 +137,9 @@ def main() -> None:
 
     elif args.command == "alerts":
 
-        alerts = analyzer.check_alerts()
+        analyzer.count_levels()
+        alert_engine = AlertEngine(analyzer.statistics)
+        alerts = alert_engine.check_alerts()
 
         print("\n========== Alerts ==========\n")
 
@@ -190,14 +195,12 @@ def main() -> None:
 
     elif args.command == "monitor":
 
-        monitor = ResourceMonitor()
-
         print("\n========== System Resources ==========\n")
 
-        print(f"CPU Usage      : {monitor.get_cpu_usage():.1f}%")
-        print(f"Memory Usage   : {monitor.get_memory_usage():.1f}%")
-        print(f"Disk Usage     : {monitor.get_disk_usage():.1f}%")
-
+        print(f"CPU Usage      : {ResourceMonitor.get_cpu_usage():.1f}%")
+        print(f"Memory Usage   : {ResourceMonitor.get_memory_usage():.1f}%")
+        print(f"Disk Usage     : {ResourceMonitor.get_disk_usage():.1f}%")
+        
         print("\n======================================")
     
 if __name__ == "__main__":
