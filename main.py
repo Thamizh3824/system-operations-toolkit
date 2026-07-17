@@ -5,6 +5,7 @@ from core.health_checker import HealthChecker
 from core.resource_monitor import ResourceMonitor
 from utils.logger import logger
 from core.alert_engine import AlertEngine
+from core.report_generator import ReportGenerator
 
 def main() -> None:
 
@@ -28,6 +29,7 @@ def main() -> None:
             "health",
             "top-errors",
             "monitor",
+            "dashboard",
         ],
         help="Command to execute"
     )
@@ -202,6 +204,27 @@ def main() -> None:
         print(f"Disk Usage     : {ResourceMonitor.get_disk_usage():.1f}%")
         
         print("\n======================================")
+
+    elif args.command == "dashboard":
+
+        analyzer.count_levels()
+
+        alert_engine = AlertEngine(analyzer.statistics)
+
+        checker = HealthChecker()
+
+        generator = ReportGenerator(
+            analyzer,
+            alert_engine,
+            checker,
+        )
+
+        generator.generate_dashboard()
+
+        print(
+            "\nDashboard generated successfully."
+            "\nOpen reports/dashboard.html\n"
+        )
     
 if __name__ == "__main__":
     main()
