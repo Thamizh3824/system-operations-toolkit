@@ -1,0 +1,8 @@
+2026-07-15 09:00:00 INFO Application started
+2026-07-15 09:00:05 WARNING High memory usage
+2026-07-15 09:00:10 ERROR Database connection failed
+2026-07-15 09:01:00 INFO User logged in
+2026-07-15 09:01:15 ERROR Database connection failed
+2026-07-15 09:02:00 WARNING Disk usage high
+2026-07-16 10:00:00 INFO Scheduled backup completed
+2026-07-16 10:01:00 ERROR Timeout while contacting API
