@@ -38,3 +38,19 @@ logs/*.generated.log
 
 __pycache__/
 *.py[cod]
+
+.venv/
+
+__pycache__/
+
+*.pyc
+
+.coverage
+
+htmlcov/
+
+reports/*.csv
+
+logs/application.log
+
+.vscode/
